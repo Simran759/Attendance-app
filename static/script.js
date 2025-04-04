@@ -1,12 +1,12 @@
 let isAdmin = false;
 let deviceId = "";
+const API_BASE_URL = "http://localhost:5000"; // Replace with your deployment URL when live
 
 document.addEventListener("DOMContentLoaded", async () => {
     deviceId = await generateDeviceId();
     document.getElementById("admin-login-btn").addEventListener("click", handleAdminLogin);
     document.getElementById("checkin-btn").addEventListener("click", handleCheckIn);
     document.getElementById("submit-location-btn").addEventListener("click", submitAdminLocation);
-    
 });
 
 async function generateDeviceId() {
@@ -25,7 +25,7 @@ async function handleAdminLogin() {
     const adminId = document.getElementById("admin-id").value;
     const adminPassword = document.getElementById("admin-password").value;
     console.log("Logging in...");
-    const response = await fetch("http://localhost:5000/admin_login", {
+    const response = await fetch(`${API_BASE_URL}/admin_login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ admin_id: adminId, password: adminPassword })
@@ -38,7 +38,6 @@ async function handleAdminLogin() {
         isAdmin = true;
         document.getElementById("login-section").style.display = "none";
         document.getElementById("admin-dashboard").style.display = "block";
-        
         fetchAttendance();
     }
 }
@@ -48,12 +47,14 @@ async function submitAdminLocation() {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
 
-            await fetch("http://localhost:5000/admin_location", {
+            const response = await fetch(`${API_BASE_URL}/admin_location`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ latitude, longitude })
             });
 
+            const data = await response.json();
+            alert(data);
             alert("Admin location updated!");
         }, () => {
             alert("Location access is required.");
@@ -75,7 +76,7 @@ async function handleCheckIn() {
 
         const studentData = { student_id: studentId, name, latitude, longitude, device_id: deviceId };
         console.log(studentData);
-        const response = await fetch("http://localhost:5000/student_checkin", {
+        const response = await fetch(`${API_BASE_URL}/student_checkin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(studentData)
@@ -95,7 +96,7 @@ async function handleCheckIn() {
 }
 
 async function markAttendance(studentData) {
-    const response = await fetch("http://localhost:5000/mark_attendance", {
+    const response = await fetch(`${API_BASE_URL}/mark_attendance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(studentData)
@@ -113,7 +114,7 @@ async function markAttendance(studentData) {
 
 async function fetchAttendance() {
     try {
-        const response = await fetch("http://localhost:5000/attendance");
+        const response = await fetch(`${API_BASE_URL}/attendance`);
         const data = await response.json();
 
         let presentCountElem = document.getElementById("present-count");
