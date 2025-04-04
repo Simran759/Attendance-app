@@ -1,6 +1,6 @@
 let isAdmin = false;
 let deviceId = "";
-const API_BASE_URL = "http://localhost:5000"; // Replace with your deployment URL when live
+const API_BASE_URL = "https://attendance-appli-1te1.vercel.app"; // Replace with your deployment URL when live
 
 document.addEventListener("DOMContentLoaded", async () => {
     deviceId = await generateDeviceId();
