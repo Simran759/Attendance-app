@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.container {
+    width: 400px;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 95%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#admin-login-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+#checkin-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+#submit-location-btn {
+    background-color: #ff9800;
+    color: white;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #f8f8f8;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.text-green {
+    color: green;
+}
+
+.text-red {
+    color: red;
+}

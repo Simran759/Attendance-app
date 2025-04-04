@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System</title>
+    <link rel="stylesheet" href="../static/styles.css">
+   
+    <script defer src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div id="login-section">
+            <h2>Admin Login</h2>
+            <input type="text" id="admin-id" placeholder="Admin ID">
+            <input type="password" id="admin-password" placeholder="Password">
+            <button id="admin-login-btn">Login</button>
+
+            <h2>Student Check-in</h2>
+            <input type="text" id="student-id" placeholder="Student ID">
+            <input type="text" id="student-name" placeholder="Name">
+            <button id="checkin-btn">Check-in</button>
+        </div>
+
+        <div id="admin-dashboard" class="hidden">
+            <h2>Admin Dashboard</h2>
+            <button id="submit-location-btn">Submit Current Location</button>
+
+            <h3>Today's Attendance</h3>
+            <p><strong>Total Present:</strong> <span id="present-count">0</span></p>
+            <ul id="present-students"></ul>
+
+            <h3>Proxy Attempts</h3>
+            <p><strong>Total Proxies:</strong> <span id="proxy-count">0</span></p>
+            <ul id="proxy-students"></ul>
+        </div>
+    </div>
+    <script defer src="../static/script.js"></script>
+</body>
+</html>

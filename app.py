@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta, date
@@ -333,6 +332,11 @@ def get_attendance():
         "total_proxy": len(all_students) - len(present_students),
         "students": response
     })
+
+
+
+
+
 
 
 
