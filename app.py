@@ -269,7 +269,7 @@ def mark_attendance():
    
             
         print(f"Student: {student_id}, Distance: {distance} km")  # Debugging
-        if distance > 0.5:  # 500m radius
+        if distance > 0.2:  # 500m radius
             print("❌ Student is too far from admin")
             return jsonify({"warning": "You are not in teacher's range"}), 200
         else :
