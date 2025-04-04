@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta, date
 from flask_cors import CORS
@@ -89,8 +89,8 @@ def haversine(lat1, lon1, lat2, lon2):
 
 # API Health Check
 @app.route("/")
-def home():
-    return "Flask app connected to NeonDB!"
+def index():
+    return render_template('index.html')
 
 # Admin Login Route
 @app.route("/admin_login", methods=["POST"])
