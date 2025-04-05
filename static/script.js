@@ -16,18 +16,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function detectDevTools() {
-    const devtools = /./;
-    devtools.toString = function () {
-        this.opened = true;
-    };
+    return new Promise((resolve, reject) => {
+        const devtools = /./;
+        devtools.toString = function () {
+            this.opened = true;
+        };
 
-    setInterval(() => {
-        console.log(devtools);
-        if (devtools.opened) {
-            alert("Developer tools detected. Please close it to continue.");
-            window.location.reload();
-        }
-    }, 1000);
+       
+
+        const checkInterval = setInterval(() => {
+            console.log(devtools);
+            if (devtools.opened) {
+                clearInterval(checkInterval);
+                reject("Developer tools are open.");
+            }
+        }, 100);
+
+        // Timeout to resolve after some time if devtools not opened
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            if (!devtools.opened) {
+                resolve("DevTools closed.");
+            }
+        }, 1000);
+    });
 }
 
 async function checkLocationMock() {
