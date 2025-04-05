@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     deviceId = await generateDeviceId();
 
     // // Check for developer tools
-    detectDevTools();
+    // detectDevTools();
 
     // Check for potential mock location
     checkLocationMock();
@@ -16,30 +16,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function detectDevTools() {
-    return new Promise((resolve, reject) => {
-        const devtools = /./;
-        devtools.toString = function () {
-            this.opened = true;
-        };
+    const devtools = /./;
+    devtools.toString = function () {
+        this.opened = true;
+    };
 
-       
-
-        const checkInterval = setInterval(() => {
-            console.log(devtools);
-            if (devtools.opened) {
-                clearInterval(checkInterval);
-                reject("Developer tools are open.");
-            }
-        }, 100);
-
-        // Timeout to resolve after some time if devtools not opened
-        setTimeout(() => {
-            clearInterval(checkInterval);
-            if (!devtools.opened) {
-                resolve("DevTools closed.");
-            }
-        }, 1000);
-    });
+    setInterval(() => {
+        console.log(devtools);
+        if (devtools.opened) {
+            alert("Developer tools detected. Please close it to continue.");
+            window.location.reload();
+        }
+    }, 1000);
 }
 
 async function checkLocationMock() {
