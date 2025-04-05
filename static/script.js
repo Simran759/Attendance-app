@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     deviceId = await generateDeviceId();
 
     // // Check for developer tools
-    // detectDevTools();
+    detectDevTools();
 
     // Check for potential mock location
     checkLocationMock();
