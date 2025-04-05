@@ -1,17 +1,15 @@
 from flask import Flask, request, jsonify,render_template
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
 from flask_cors import CORS
 from sqlalchemy import and_
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from math import radians, sin, cos, sqrt, atan2
 from dotenv import load_dotenv
-from datetime import datetime, UTC,timezone
-# Student Check-in Route
-from datetime import timedelta
+from datetime import datetime
 from sqlalchemy import and_
-
+from geopy.distance import geodesic
 
 from sqlalchemy import text
 
@@ -40,7 +38,7 @@ class Student(db.Model):
     name = db.Column(db.String(100), nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.now())
     device_id = db.Column(db.String(100))
     date = db.Column(db.Date, default=date.today)
 
@@ -66,7 +64,7 @@ class AdminLocation(db.Model):
      # Add admin_id if needed
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    timestamp = db.Column(db.DateTime, default=lambda: datetime.now(datetime.UTC))  # Fix UTC issue
+    timestamp = db.Column(db.DateTime, default=lambda: datetime.now())  # Fix UTC issue
      
 
 
@@ -172,17 +170,25 @@ def student_checkin():
         data = request.json
         print("Received Data:", data)  # Debugging incoming data
 
-        required_fields = ["student_id", "name", "latitude", "longitude", "device_id"]
+        required_fields = ["student_id", "name", "latitude", "longitude", "device_id","accuracy"]
         if not all(key in data for key in required_fields):
             print("Error: Missing required fields")
             return jsonify({"error": "Missing required fields"}), 400
-        
+        if data["accuracy"] is None or data["accuracy"] > 200:
+             return jsonify({"warning": "Location accuracy too low. Check-in blocked due to suspected spoofing."}), 403
+
         latest_admin_location = AdminLocation.query.order_by(AdminLocation.timestamp.desc()).first()
         if not latest_admin_location:
             print("❌ No admin location found")
             return jsonify({"error": "No admin location found"}), 400
 
         print(f"📍 Latest Admin Location: {latest_admin_location.latitude}, {latest_admin_location.longitude}, {latest_admin_location.timestamp}")
+       
+
+    # Optionally log unusual user agents
+        user_agent = request.headers.get("User-Agent", "")
+        if "Headless" in user_agent or "PhantomJS" in user_agent:
+             return jsonify({"warning": "Suspicious browser detected."})
         now_time=datetime.now()
         time_difference = (now_time - latest_admin_location.timestamp).total_seconds()
         print(time_difference)

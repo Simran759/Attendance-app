@@ -1,14 +1,55 @@
 let isAdmin = false;
 let deviceId = "";
 const API_BASE_URL = "https://attendance-appli-1te1.vercel.app"; // Replace with your deployment URL when live
-
 document.addEventListener("DOMContentLoaded", async () => {
     deviceId = await generateDeviceId();
+
+    // // Check for developer tools
+    // detectDevTools();
+
+    // Check for potential mock location
+    checkLocationMock();
+
     document.getElementById("admin-login-btn").addEventListener("click", handleAdminLogin);
     document.getElementById("checkin-btn").addEventListener("click", handleCheckIn);
     document.getElementById("submit-location-btn").addEventListener("click", submitAdminLocation);
 });
 
+function detectDevTools() {
+    const devtools = /./;
+    devtools.toString = function () {
+        this.opened = true;
+    };
+
+    setInterval(() => {
+        console.log(devtools);
+        if (devtools.opened) {
+            alert("Developer tools detected. Please close it to continue.");
+            window.location.reload();
+        }
+    }, 1000);
+}
+
+async function checkLocationMock() {
+    if (!navigator.geolocation) {
+        alert("Geolocation not supported!");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            accuracy = pos.coords.accuracy;
+            if (accuracy > 200) {
+                alert("Location accuracy too low. Spoofed location suspected.");
+                // Optional: block further actions
+            }
+        },
+        (err) => {
+            alert("Error fetching location.");
+        },
+        { enableHighAccuracy: true }
+    );
+}
 async function generateDeviceId() {
     try {
         const fpPromise = FingerprintJS.load();
@@ -54,7 +95,7 @@ async function submitAdminLocation() {
             });
 
             const data = await response.json();
-            alert(data);
+            // alert(data);
             alert("Admin location updated!");
         }, () => {
             alert("Location access is required.");
@@ -72,9 +113,9 @@ async function handleCheckIn() {
     }
 
     navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
+        const { latitude, longitude,accuracy } = position.coords;
 
-        const studentData = { student_id: studentId, name, latitude, longitude, device_id: deviceId };
+        const studentData = { student_id: studentId, name, latitude, longitude, device_id: deviceId ,accuracy:accuracy};
         console.log(studentData);
         const response = await fetch(`${API_BASE_URL}/student_checkin`, {
             method: "POST",
